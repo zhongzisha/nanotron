@@ -1,5 +1,8 @@
 import torch
-from flash_attn.ops.triton.layer_norm import layer_norm_fn
+try:
+    from flash_attn.ops.triton.layer_norm import layer_norm_fn
+except:
+    from .flash_attn_layer_norm import layer_norm_fn
 from torch import nn
 
 

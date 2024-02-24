@@ -85,6 +85,7 @@ def sanity_check_dataloader(
 # Adapted from h4/src/h4/data/loading.py
 def get_datasets(
     hf_dataset_or_datasets: Union[dict, str],
+    hf_dataset_or_datasets_name: str,
     splits: Optional[Union[List[str], str]] = ["train", "test"],
 ) -> "DatasetDict":
     """
@@ -116,7 +117,9 @@ def get_datasets(
         for split in splits:
             raw_datasets[split] = load_dataset(
                 hf_dataset_or_datasets,
+                name=hf_dataset_or_datasets_name,
                 split=split,
+                trust_remote_code=True
             )
     else:
         raise ValueError(f"hf_dataset_or_datasets must be a dict or string but is {type(hf_dataset_or_datasets)}")

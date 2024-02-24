@@ -80,6 +80,7 @@ class LoggingArgs:
 @dataclass
 class PretrainDatasetsArgs:
     hf_dataset_or_datasets: Union[str, list, dict]
+    hf_dataset_or_datasets_name: str = ""
     hf_dataset_splits: Optional[Union[str, list]] = None
     hf_dataset_config_name: Optional[str] = None
     dataset_processing_num_proc_per_process: Optional[int] = 1

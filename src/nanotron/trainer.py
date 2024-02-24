@@ -49,8 +49,8 @@ from nanotron.logging import (
 )
 from nanotron.models import NanotronModel, build_model
 from nanotron.models.base import check_model_has_grad
-from nanotron.models.llama import LlamaForTraining, RotaryEmbedding
-from nanotron.models.starcoder2 import Starcoder2ForTraining
+from nanotron.models.llama_xformers import LlamaForTraining, RotaryEmbedding
+# from nanotron.models.starcoder2 import Starcoder2ForTraining
 from nanotron.optim.clip_grads import clip_grad_norm
 from nanotron.parallel import ParallelContext
 from nanotron.parallel.data_parallel.utils import sync_gradients_across_dp
@@ -94,14 +94,14 @@ dist_logger.setLevel(logging.WARNING)
 
 CONFIG_TO_MODEL_CLASS = {
     "LlamaConfig": LlamaForTraining,
-    "Starcoder2Config": Starcoder2ForTraining,
+    # "Starcoder2Config": Starcoder2ForTraining,
 }
 
-try:
-    import wandb
-except ImportError:
-    wandb = None
-
+# try:
+#     import wandb
+# except ImportError:
+#     wandb = None
+wandb = None
 
 class DistributedTrainer:
     def __init__(
@@ -507,6 +507,8 @@ class DistributedTrainer:
     def init_model(self) -> Union[NanotronModel, DistributedDataParallel]:
         """Initialize the model and load weights from checkpoint if needed."""
         # TODO: add max_position_embeddings
+        print(self.config)
+        print(self.model_config)
         self.model_config.vocab_size = _vocab_size_with_padding(
             self.model_config.vocab_size,
             pg_size=self.parallel_context.tp_pg.size(),

@@ -75,6 +75,7 @@ def get_dataloader(trainer: DistributedTrainer):
             # We load the raw dataset
             raw_dataset = get_datasets(
                 hf_dataset_or_datasets=trainer.config.data.dataset.hf_dataset_or_datasets,
+                hf_dataset_or_datasets_name=trainer.config.data.dataset.hf_dataset_or_datasets_name,
                 splits=trainer.config.data.dataset.hf_dataset_splits,
             )["train"]
 

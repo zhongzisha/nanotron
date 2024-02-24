@@ -1,0 +1,1 @@
+for jobid in `ps -u | grep python | awk '{ print $2 }'`; do kill $jobid; done
