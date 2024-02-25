@@ -39,7 +39,7 @@ print(f"Model has {num_params} parameters")
 seed = 42
 
 learning_rate = LRSchedulerArgs(
-    learning_rate=3e-4, lr_warmup_steps=2, lr_warmup_style="linear", lr_decay_style="cosine", min_decay_lr=1e-5
+    learning_rate=3e-4, lr_warmup_steps=20, lr_warmup_style="linear", lr_decay_style="cosine", min_decay_lr=1e-5
 )
 
 optimizer = OptimizerArgs(
@@ -63,7 +63,7 @@ parallelism = ParallelismArgs(
     tp_linear_async_communication=True,
 )
 
-tokens = TokensArgs(sequence_length=8192, train_steps=1000, micro_batch_size=1, batch_accumulation_per_replica=32)
+tokens = TokensArgs(sequence_length=8192, train_steps=650, micro_batch_size=1, batch_accumulation_per_replica=256)
 
 dataset = PretrainDatasetsArgs(hf_dataset_or_datasets="togethercomputer/RedPajama-Data-1T-Sample", text_column_name="text")
 
