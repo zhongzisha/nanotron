@@ -5,32 +5,6 @@ checkpoints:
   resume_checkpoint_path: null
   save_initial_state: false
 data_stages:
-<<<<<<< HEAD
-  - name: Stable Training Stage
-    start_training_step: 1
-    data:
-      dataset:
-        dataset_overwrite_cache: false
-        dataset_processing_num_proc_per_process: 1
-        hf_dataset_config_name: null
-        hf_dataset_or_datasets: HuggingFaceH4/testing_alpaca_small
-        hf_dataset_splits: train
-        text_column_name: completion
-      num_loading_workers: 1
-      seed: 42
-  - name: Annealing Phase
-    start_training_step: 10
-    data:
-      dataset:
-        dataset_overwrite_cache: false
-        dataset_processing_num_proc_per_process: 1
-        hf_dataset_config_name: null
-        hf_dataset_or_datasets: HuggingFaceH4/testing_alpaca_small
-        hf_dataset_splits: train
-        text_column_name: completion
-      num_loading_workers: 1
-      seed: 42
-=======
 - data:
     dataset:
       dataset_overwrite_cache: false
@@ -55,7 +29,6 @@ data_stages:
     seed: 42
   name: Annealing Phase
   start_training_step: 10
->>>>>>> upstream/main
 general:
   benchmark_csv_path: null
   consumed_train_samples: null
@@ -70,8 +43,8 @@ logging:
   log_level: info
   log_level_replica: info
 model:
-  ddp_bucket_cap_mb: 2048
-  dtype: float16
+  ddp_bucket_cap_mb: 25
+  dtype: bfloat16
   init_method:
     std: 0.025
   make_vocab_size_divisible_by: 1
@@ -79,27 +52,21 @@ model:
     bos_token_id: 1
     eos_token_id: 2
     hidden_act: silu
-    # hidden_size: 16
-    hidden_size: 2048
+    hidden_size: 16
     initializer_range: 0.02
-    # intermediate_size: 64
-    intermediate_size: 8640
+    intermediate_size: 64
     is_llama_config: true
-    # max_position_embeddings: 256
-    max_position_embeddings: 2048
-    num_attention_heads: 32
-    num_hidden_layers: 24
-    num_key_value_heads: 32
+    max_position_embeddings: 256
+    num_attention_heads: 4
+    num_hidden_layers: 2
+    num_key_value_heads: 4
     pad_token_id: null
-    pad_token_id: 0
     pretraining_tp: 1
-    # rms_norm_eps: 1.0e-05
-    rms_norm_eps: 1.0e-06
+    rms_norm_eps: 1.0e-05
     rope_scaling: null
     tie_word_embeddings: true
     use_cache: true
-    # vocab_size: 256
-    vocab_size: 32000
+    vocab_size: 256
 optimizer:
   accumulate_grad_in_fp32: true
   adam_beta1: 0.9
@@ -107,9 +74,9 @@ optimizer:
   adam_eps: 1.0e-08
   clip_grad: 1.0
   learning_rate_scheduler:
-    learning_rate: 0.001
+    learning_rate: 0.0003
     lr_decay_starting_step: null
-    lr_decay_steps: 100
+    lr_decay_steps: 8
     lr_decay_style: cosine
     lr_warmup_steps: 2
     lr_warmup_style: linear
@@ -127,11 +94,11 @@ parallelism:
   tp_mode: REDUCE_SCATTER
 profiler: null
 tokenizer:
-  tokenizer_max_length: 1024
+  tokenizer_max_length: null
   tokenizer_name_or_path: gpt2
   tokenizer_revision: null
 tokens:
-  batch_accumulation_per_replica: 2
+  batch_accumulation_per_replica: 1
   limit_test_batches: 0
   limit_val_batches: 0
   micro_batch_size: 2
