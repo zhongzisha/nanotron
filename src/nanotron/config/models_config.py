@@ -9,6 +9,16 @@ class RandomInit:
 
 
 @dataclass
+class SpectralMupInit:
+    """This is used to initialize the model with spectral mup. Set it to True to use it."""
+
+    use_mup: bool
+
+    def __post_init__(self):
+        assert self.use_mup, "Remove `use_mup` if you don't want to use it"
+
+
+@dataclass
 class ExistingCheckpointInit:
     """This is used to initialize from an already existing model (without optimizer, lr_scheduler...)"""
 
@@ -42,73 +52,18 @@ class LlamaConfig:
     vocab_size: int = 32000
 
     def __post_init__(self):
+        # NOTE: user don't set self._init_method, ModelArgs will set it
+        # then we only pass LlamaConfig around
+        self._is_using_mup: bool = False
+        # self._init_method: Optional[Union[RandomInit, SpectralMupInit, ExistingCheckpointInit]] = None
+
         # for backward compatibility
         if self.num_key_value_heads is None:
             self.num_key_value_heads = self.num_attention_heads
 
-@dataclass
-class Llama13BConfig:
-    """Configuration for a LLAMA-3B model
-
-    Be careful on having a coherent typing as we use it to reconstruct the model from yaml
-    """
-
-    bos_token_id: int = 1
-    eos_token_id: int = 2
-    hidden_act: str = "silu"
-    hidden_size: int = 5120
-    initializer_range: float = 0.02
-    intermediate_size: int = 13824
-    is_llama_config: bool = True  # We use this help differentiate models in yaml/python conversion
-    max_position_embeddings: int = 4096
-    num_attention_heads: int = 40
-    num_hidden_layers: int = 40
-    num_key_value_heads: Optional[int] = None
-    pad_token_id: Optional[int] = None
-    pretraining_tp: int = 1
-    rms_norm_eps: float = 1e-05
-    rope_scaling: Optional[dict] = None
-    tie_word_embeddings: bool = False
-    use_cache: bool = True
-    vocab_size: int = 32000
-
-    def __post_init__(self):
-        # for backward compatibility
-        if self.num_key_value_heads is None:
-            self.num_key_value_heads = self.num_attention_heads
-
-
-@dataclass
-class Llama70BConfig:
-    """Configuration for a LLAMA-3B model
-
-    Be careful on having a coherent typing as we use it to reconstruct the model from yaml
-    """
-
-    bos_token_id: int = 1
-    eos_token_id: int = 2
-    hidden_act: str = "silu"
-    hidden_size: int = 8192
-    initializer_range: float = 0.02
-    intermediate_size: int = 28672
-    is_llama_config: bool = True  # We use this help differentiate models in yaml/python conversion
-    max_position_embeddings: int = 4096
-    num_attention_heads: int = 64
-    num_hidden_layers: int = 80
-    num_key_value_heads: Optional[int] = 8
-    pad_token_id: Optional[int] = None
-    pretraining_tp: int = 1
-    rms_norm_eps: float = 1e-05
-    rope_scaling: Optional[dict] = None
-    tie_word_embeddings: bool = False
-    use_cache: bool = True
-    vocab_size: int = 32000
-
-    def __post_init__(self):
-        # for backward compatibility
-        if self.num_key_value_heads is None:
-            self.num_key_value_heads = self.num_attention_heads
-
+    @property
+    def is_using_mup(self) -> bool:
+        return self._is_using_mup
 
 
 @dataclass
